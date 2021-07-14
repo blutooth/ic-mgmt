@@ -1,0 +1,21 @@
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: allusion-be/setup-dfx@v0.2.1
+        with:
+          dfx-version: 0.7.2
+          vessel-version: 0.6.2
+          install-moc: false
+      - name: "install wasmtime"
+        run: |
+          wget https://github.com/bytecodealliance/wasmtime/releases/download/v0.28.0/wasmtime-v0.28.0-x86_64-linux.tar.xz
+          tar xf wasmtime-v0.28.0-x86_64-linux.tar.xz
+          cp wasmtime-v0.28.0-x86_64-linux/wasmtime /home/runner/bin/wasmtime
+      - name: "test"
+        run: |
+          pushd test
+          ./run.sh
+          popd
